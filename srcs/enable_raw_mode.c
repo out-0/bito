@@ -9,11 +9,16 @@ void	enable_raw_mode(void)
 	// Get a copy of the actuall terminos flags settings
 	tcgetattr(STDIN_FILENO, &original_mode);
 
-	raw = original_mode; // Copy original settings so can modify
+	raw = original_mode;
+
 	// Register the reset function with the original mods
 	atexit(disable_raw_mode);
-	// Change the flag of echoing and disable it
-	raw.c_lflag &= ~(ECHO);
+
+	raw.c_iflag = raw.c_iflag & ~(IXON | ICRNL);	// Turn off input flags
+	raw.c_lflag = raw.c_lflag & ~(ECHO | ICANON | IEXTEN | ISIG);	//Turn off some local flags
+	raw.c_cc[VMIN] = 1;	// Return each byte as available
+	raw.c_cc[VTIME] = 0;	// no timeout
+
 	// write the new change of attr to the terminal
-	tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+	tcsetattr(STDIN_FILENO, TCSANOW, &raw);
 }
