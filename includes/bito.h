@@ -5,6 +5,7 @@
 #include <stdio.h>	// For printf
 #include <termios.h>	// For tools and struct to handle terminal
 #include <stdlib.h>	// For atexit register function
+#include <ctype.h>	// For control characters
 
 // The struct to change the terminal behavior
 extern struct termios	original_mode;

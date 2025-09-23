@@ -2,14 +2,15 @@
 
 int	main(void)
 {
-	int	ch;
+	unsigned char	ch;
 
 	enable_raw_mode();	// Disable echo and buffering
-	while (read(STDIN_FILENO, &ch, 1))
+	while (read(STDIN_FILENO, &ch, 1) && ch != 'q')
 	{
-		if ((char)ch == 'q')
-			break;
-		printf("%c", ch);
+		if (iscntrl(ch))
+			printf("%d cntrl =%c\n", ch, ch);
+		else
+			printf("%d -> %c\n", ch, ch);
 	}
 	return (0);
 }
