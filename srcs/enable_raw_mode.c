@@ -13,9 +13,13 @@ void	enable_raw_mode(void)
 
 	// Register the reset function with the original mods
 	atexit(disable_raw_mode);
+	// Turn off and switch some input/output/local/control_chars  flags
+	raw.c_iflag &= ~(IXON | ICRNL | INLCR | BRKINT | INPCK | ISTRIP);
+	raw.c_oflag &= ~(OPOST);
+	raw.c_lflag = raw.c_lflag & ~(ECHO | ICANON | IEXTEN | ISIG);
+	raw.c_cflag &= ~(CSIZE);
+	raw.c_cflag |= (CS8);
 
-	raw.c_iflag = raw.c_iflag & ~(IXON | ICRNL);	// Turn off input flags
-	raw.c_lflag = raw.c_lflag & ~(ECHO | ICANON | IEXTEN | ISIG);	//Turn off some local flags
 	raw.c_cc[VMIN] = 1;	// Return each byte as available
 	raw.c_cc[VTIME] = 0;	// no timeout
 
