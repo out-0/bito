@@ -12,5 +12,6 @@ extern struct termios	original_mode;
 
 void	enable_raw_mode(void);
 void	disable_raw_mode(void);
+void	error_exit(char *message);
 
 #endif

@@ -2,12 +2,14 @@
 
 struct termios original_mode;
 
-// Entering the raw to disblay buffering input, and disabling echoing
+// Entering the raw to disblay buffering input,
+// and disabling echoing
 void	enable_raw_mode(void)
 {
 	struct termios raw;
 	// Get a copy of the actuall terminos flags settings
-	tcgetattr(STDIN_FILENO, &original_mode);
+	if (tcgetattr(STDIN_FILENO, &original_mode) == -1)
+		error_exit("tcgetattr");
 
 	raw = original_mode;
 
@@ -16,7 +18,7 @@ void	enable_raw_mode(void)
 	// Turn off and switch some input/output/local/control_chars  flags
 	raw.c_iflag &= ~(IXON | ICRNL | INLCR | BRKINT | INPCK | ISTRIP);
 	raw.c_oflag &= ~(OPOST);
-	raw.c_lflag = raw.c_lflag & ~(ECHO | ICANON | IEXTEN | ISIG);
+	raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
 	raw.c_cflag &= ~(CSIZE);
 	raw.c_cflag |= (CS8);
 
@@ -24,5 +26,6 @@ void	enable_raw_mode(void)
 	raw.c_cc[VTIME] = 0;	// no timeout
 
 	// write the new change of attr to the terminal
-	tcsetattr(STDIN_FILENO, TCSANOW, &raw);
+	if (tcsetattr(STDIN_FILENO, TCSANOW, &raw) == -1)
+		error_exit("tcsetattr");
 }
