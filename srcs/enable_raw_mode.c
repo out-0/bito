@@ -1,6 +1,6 @@
 #include "../includes/bito.h"
 
-struct termios original_mode;
+t_my_config	editor;
 
 // Entering the raw to disblay buffering input,
 // and disabling echoing
@@ -8,10 +8,10 @@ void	enable_raw_mode(void)
 {
 	struct termios raw;
 	// Get a copy of the actuall terminos flags settings
-	if (tcgetattr(STDIN_FILENO, &original_mode) == -1)
+	if (tcgetattr(STDIN_FILENO, &editor.original_termios) == -1)
 		error_exit("tcgetattr");
 
-	raw = original_mode;
+	raw = editor.original_termios;
 
 	// Register the reset function with the original mods
 	atexit(disable_raw_mode);
