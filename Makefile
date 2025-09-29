@@ -8,6 +8,7 @@ OBJS	= $(SRCS:.c=.o)
 
 all: $(OBJS)
 	$(CC) $(OBJS) -o $(NAME)
+	make clean
 	./$(NAME)
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
